@@ -1,15 +1,27 @@
+import { Product } from "@/@types/product";
+import { api } from "@/data/api";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Teste() {
+async function getFeaturedProducts(): Promise<Product[]> {
+  const response = await api("/products/featured");
+
+  const products = await response.json();
+
+  return products;
+}
+
+export default async function Home() {
+  const [highlightedProduct, ...otherProducts] = await getFeaturedProducts();
+
   return (
     <div className="grid max-h-[860px] grid-cols-9 grid-rows-6 gap-6">
       <Link
-        href="/"
+        href={`/product/${highlightedProduct.slug}`}
         className="group relative col-span-6 row-span-6 flex items-end justify-center overflow-hidden rounded-lg bg-zinc-900 "
       >
         <Image
-          src="/moletom-never-stop-learning.png"
+          src={highlightedProduct.image}
           width={920}
           height={920}
           quality={100}
@@ -18,54 +30,48 @@ export default function Teste() {
         />
 
         <div className="absolute bottom-20 right-20 flex h-12 max-w-[280px] items-center gap-2 rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
-          <span className="truncate text-sm">Moletom Never Stop Learning</span>
+          <span className="truncate text-sm">{highlightedProduct.title}</span>
           <span className="flex h-full items-center justify-center rounded-full bg-violet-500 px-4 font-semibold">
-            R$129
+            {highlightedProduct.price.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
           </span>
         </div>
       </Link>
 
-      <Link
-        href="/"
-        className="group relative col-span-3 row-span-3 flex items-end justify-center overflow-hidden rounded-lg bg-zinc-900 transition-transform duration-500 group-hover:scale-105"
-      >
-        <Image
-          src="/moletom-java.png"
-          width={860}
-          height={860}
-          quality={100}
-          alt=""
-          className="transition-transform duration-500 group-hover:scale-105 "
-        />
+      {otherProducts.map((product) => {
+        return (
+          <Link
+            href={`/product/${product.slug}`}
+            className="group relative col-span-3 row-span-3 flex items-end justify-center overflow-hidden rounded-lg bg-zinc-900 transition-transform duration-500 group-hover:scale-105"
+            key={product.id}
+          >
+            <Image
+              src={product.image}
+              width={860}
+              height={860}
+              quality={100}
+              alt=""
+              className="transition-transform duration-500 group-hover:scale-105 "
+            />
 
-        <div className="absolute bottom-10 right-10 flex h-12 max-w-[280px] items-center gap-2 rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
-          <span className="truncate text-sm">Moletom Java</span>
-          <span className="flex h-full items-center justify-center rounded-full bg-violet-500 px-4 font-semibold">
-            R$129
-          </span>
-        </div>
-      </Link>
-
-      <Link
-        href="/"
-        className="group relative col-span-3 row-span-3 flex items-end justify-center overflow-hidden rounded-lg bg-zinc-900"
-      >
-        <Image
-          src="/moletom-ai-side.png"
-          width={860}
-          height={860}
-          quality={100}
-          alt=""
-          className="transition-transform duration-500 group-hover:scale-105 "
-        />
-
-        <div className="absolute bottom-10 right-10 flex h-12 max-w-[280px] items-center gap-2 rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
-          <span className="truncate text-sm">Moletom AI Side</span>
-          <span className="flex h-full items-center justify-center rounded-full bg-violet-500 px-4 font-semibold">
-            R$129
-          </span>
-        </div>
-      </Link>
+            <div className="absolute bottom-10 right-10 flex h-12 max-w-[280px] items-center gap-2 rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
+              <span className="truncate text-sm">{product.title}</span>
+              <span className="flex h-full items-center justify-center rounded-full bg-violet-500 px-4 font-semibold">
+                {product.price.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}
+              </span>
+            </div>
+          </Link>
+        );
+      })}
     </div>
   );
 }
