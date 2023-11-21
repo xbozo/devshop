@@ -1,8 +1,14 @@
+const { hostname } = require("os");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	images: {
-		domains: ['github.com'],
-	},
-}
+  images: {
+    remotePatterns: [
+      {
+        hostname: "github.com",
+      },
+    ],
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
