@@ -36,10 +36,9 @@ export default async function Search({ searchParams }: SearchProps) {
       <p className="text-sm">
         Resultados para: <span className="font-semibold ">{query}</span>
       </p>
-
-      {products.length > 0 ? (
-        products.map((product) => (
-          <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 gap-6">
+        {products.length > 0 &&
+          products.map((product) => (
             <Link
               href={`/product/${product.slug}`}
               className="group relative flex items-end justify-center overflow-hidden rounded-lg bg-zinc-900 transition-transform duration-500 group-hover:scale-105"
@@ -66,10 +65,11 @@ export default async function Search({ searchParams }: SearchProps) {
                 </span>
               </div>
             </Link>
-          </div>
-        ))
-      ) : (
-        <span className="mx-auto mt-5 text-2xl">
+          ))}
+      </div>
+
+      {products.length <= 0 && (
+        <span className="mx-auto mt-5 flex text-2xl">
           Nenhum produto encontrado.
         </span>
       )}
