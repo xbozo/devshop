@@ -5,6 +5,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://devstore-nu.vercel.app'),
   title: {
     template: '%s | devstore',
     default: 'devstore',

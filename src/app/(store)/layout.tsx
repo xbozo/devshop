@@ -1,5 +1,6 @@
 import { Header } from '@/components/header'
 import { CartProvider } from '@/contexts/cart-context'
+import { Metadata } from 'next'
 import { ReactNode } from 'react'
 
 type StoreLayoutProps = {
